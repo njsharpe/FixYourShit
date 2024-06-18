@@ -1,0 +1,5 @@
+name: FixYourShit
+main: net.njsharpe.fixyourshit.FixYourShit
+version: ${version}
+
+api-version: 1.20

@@ -22,7 +22,8 @@ public class FixYourShit extends JavaPlugin {
         this.getServer().addRecipe(new SafariNetRecipe());
         this.getServer().addRecipe(new TimeBottleRecipe());
         this.getServer().addRecipe(new AngelBlockRecipe());
-        IntStream.range(4, 16).forEach(i -> getServer().addRecipe(new LongerRocketRecipe(i)));
+        IntStream.range(4, 16).forEach(i -> this.getServer().addRecipe(new LongerRocketRecipe(i)));
+        Lookup.getSkullMaterials().forEach(m -> this.getServer().addRecipe(new MiniBlockRecipe(m)));
         SlabRecipes.init();
 
         this.getServer().getPluginManager().registerEvents(new EntityListener(), this);

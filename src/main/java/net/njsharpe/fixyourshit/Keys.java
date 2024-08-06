@@ -17,4 +17,9 @@ public class Keys {
                 .formatted(duration));
     }
 
+    public static NamespacedKey getMiniBlockKeyForMaterial(Material material) {
+        return new NamespacedKey(FixYourShit.getInstance(), "recipe_%s_mini_block"
+                .formatted(material.name().toLowerCase()));
+    }
+
 }

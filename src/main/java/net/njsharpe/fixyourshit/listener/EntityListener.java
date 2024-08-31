@@ -6,13 +6,12 @@ import net.njsharpe.fixyourshit.FixYourShit;
 import net.njsharpe.fixyourshit.entity.Entities;
 import net.njsharpe.fixyourshit.event.ConcretePowderItemConvertEvent;
 import net.njsharpe.fixyourshit.item.SafariNet;
-import net.njsharpe.fixyourshit.item.TimeBottle;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.Levelled;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +20,6 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class EntityListener implements Listener {
 
@@ -55,9 +53,18 @@ public class EntityListener implements Listener {
 
                 Location location = item.getLocation();
                 Block block = location.getBlock();
-                if(!block.getType().equals(Material.WATER)) {
+                if(!block.getType().equals(Material.WATER_CAULDRON)) {
                     return;
                 }
+
+                Levelled levelled = (Levelled) block.getBlockData();
+                if(levelled.getLevel() < levelled.getMinimumLevel()) {
+                    return;
+                }
+
+                levelled.setLevel(levelled.getLevel() - 1);
+
+                block.setBlockData(levelled);
 
                 ConcretePowderItemConvertEvent e = new ConcretePowderItemConvertEvent(item);
                 Bukkit.getPluginManager().callEvent(e);
@@ -68,6 +75,9 @@ public class EntityListener implements Listener {
 
                 itemStack.setType(concrete);
                 item.setItemStack(itemStack);
+
+                // TODO: Add velocity to thrown item entity
+                // Force it to pop out of the cauldron and around in a relative circle
             }, 0L, 5L);
         }
     }

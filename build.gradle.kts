@@ -1,15 +1,15 @@
 plugins {
     id("java")
     id("idea")
-    id("io.papermc.paperweight.userdev") version("1.5.11")
+    id("io.papermc.paperweight.userdev") version("1.7.2")
 }
 
 group = "net.njsharpe"
-version = "20240806-1.10.0-SNAPSHOT"
+version = "20240831-1.10.0-SNAPSHOT"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
     withJavadocJar()
     withSourcesJar()
@@ -20,12 +20,12 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
 
     compileOnly("org.jetbrains:annotations:24.0.1")
 
-    compileOnly("org.projectlombok:lombok:1.18.28")
-    annotationProcessor("org.projectlombok:lombok:1.18.28")
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
 }
 
 tasks.processResources {

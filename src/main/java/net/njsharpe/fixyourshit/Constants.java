@@ -66,6 +66,21 @@ public class Constants {
         return ANGEL_BLOCK_RECIPE_KEY;
     }
 
+    private final static NamespacedKey ARMORED_ELYTRA_ARMOR_MODIFIER_KEY = new NamespacedKey(FixYourShit.getInstance(), "modifier_armor_armored_elytra");
+    public static NamespacedKey getArmoredElytraArmorModifierKey() {
+        return ARMORED_ELYTRA_ARMOR_MODIFIER_KEY;
+    }
+
+    private final static NamespacedKey ARMORED_ELYTRA_TOUGHNESS_MODIFIER_KEY = new NamespacedKey(FixYourShit.getInstance(), "modifier_toughness_armored_elytra");
+    public static NamespacedKey getArmoredElytraToughnessModifierKey() {
+        return ARMORED_ELYTRA_TOUGHNESS_MODIFIER_KEY;
+    }
+
+    private final static NamespacedKey ARMORED_ELYTRA_KNOCKBACK_RESISTANCE_MODIFIER_KEY = new NamespacedKey(FixYourShit.getInstance(), "modifier_knockback_resistance_armored_elytra");
+    public static NamespacedKey getArmoredElytraKnockbackResistanceModifierKey() {
+        return ARMORED_ELYTRA_KNOCKBACK_RESISTANCE_MODIFIER_KEY;
+    }
+
     private final static Logger LOGGER = FixYourShit.getInstance().getLogger();
     public static Logger getLogger() {
         return LOGGER;

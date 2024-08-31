@@ -13,6 +13,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -23,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -53,6 +53,7 @@ public class ArmoredElytra implements ShitItem {
         this(null, null, null, sourceArmorMaterial);
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @NotNull
     @Override
     public ItemStack getItem() {
@@ -77,22 +78,20 @@ public class ArmoredElytra implements ShitItem {
         meta.lore(this.enchantments.isEmpty() ? List.of(name) : List.of(spacer, name));
 
         if(this.armor != null) {
-            AttributeModifier armor = new AttributeModifier(UUID.randomUUID(), "ArmoredElytraArmorModifier",
-                    this.armor, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+            AttributeModifier armor = new AttributeModifier(Constants.getArmoredElytraArmorModifierKey(),
+                    this.armor, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.CHEST);
             meta.addAttributeModifier(Attribute.GENERIC_ARMOR, armor);
         }
 
         if(this.toughness != null) {
-            AttributeModifier toughness = new AttributeModifier(UUID.randomUUID(),
-                    "ArmoredElytraArmorToughnessModifier", this.toughness, AttributeModifier.Operation.ADD_NUMBER,
-                    EquipmentSlot.CHEST);
+            AttributeModifier toughness = new AttributeModifier(Constants.getArmoredElytraToughnessModifierKey(),
+                    this.toughness, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.CHEST);
             meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, toughness);
         }
 
         if(this.knockbackResistance != null) {
-            AttributeModifier knockbackResistance = new AttributeModifier(UUID.randomUUID(),
-                    "ArmoredElytraKnockbackResistanceModifier", this.knockbackResistance,
-                    AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+            AttributeModifier knockbackResistance = new AttributeModifier(Constants.getArmoredElytraKnockbackResistanceModifierKey(),
+                    this.knockbackResistance, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.CHEST);
             meta.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, knockbackResistance);
         }
 

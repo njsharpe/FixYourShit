@@ -1,17 +1,13 @@
 package net.njsharpe.fixyourshit.listener;
 
-import com.google.common.collect.Multimap;
 import net.njsharpe.fixyourshit.FixYourShit;
 import net.njsharpe.fixyourshit.event.CropTrampleEvent;
 import net.njsharpe.fixyourshit.event.ReplantCropEvent;
 import net.njsharpe.fixyourshit.item.ArmoredElytra;
-import net.njsharpe.fixyourshit.item.Attributes;
 import net.njsharpe.fixyourshit.item.Crop;
 import net.njsharpe.fixyourshit.item.TimeBottle;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
@@ -28,6 +24,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
+import org.bukkit.inventory.view.AnvilView;
 
 import java.util.*;
 
@@ -77,10 +74,11 @@ public class BlockListener implements Listener {
         }, 1L);
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "UnstableApiUsage"})
     @EventHandler
     public void onUseNetherStarInAnvil(PrepareAnvilEvent event) {
         AnvilInventory inventory = event.getInventory();
+        AnvilView view = event.getView();
 
         ItemStack first = inventory.getFirstItem();
         ItemStack second = inventory.getSecondItem();
@@ -101,14 +99,15 @@ public class BlockListener implements Listener {
         repairable.setRepairCost(0);
         first.setItemMeta(meta);
 
-        inventory.setRepairCost(1);
+        view.setRepairCost(1);
         event.setResult(first);
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "UnstableApiUsage"})
     @EventHandler
     public void onUseElytraInAnvil(PrepareAnvilEvent event) {
         AnvilInventory inventory = event.getInventory();
+        AnvilView view = event.getView();
 
         ItemStack first = inventory.getFirstItem();
         ItemStack second = inventory.getSecondItem();
@@ -123,7 +122,7 @@ public class BlockListener implements Listener {
 
         ArmoredElytra result = ArmoredElytra.merge(first, second);
 
-        inventory.setRepairCost(1);
+        view.setRepairCost(1);
         event.setResult(result.getItem());
     }
 
@@ -192,8 +191,8 @@ public class BlockListener implements Listener {
         }
 
         Map<Enchantment, Integer> enchantments = boots.getEnchantments();
-        if(enchantments.containsKey(Enchantment.PROTECTION_FALL)) {
-            int level = enchantments.get(Enchantment.PROTECTION_FALL);
+        if(enchantments.containsKey(Enchantment.FEATHER_FALLING)) {
+            int level = enchantments.get(Enchantment.FEATHER_FALLING);
             float height = (level * 1.35F) + 2.0F;
             float distance = entity.getFallDistance();
             if(height >= distance) {

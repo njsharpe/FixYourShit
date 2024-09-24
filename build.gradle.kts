@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.njsharpe"
-version = "20240924-1.11.1-SNAPSHOT"
+version = "20240924-1.12.0-SNAPSHOT"
 
 java {
     toolchain {

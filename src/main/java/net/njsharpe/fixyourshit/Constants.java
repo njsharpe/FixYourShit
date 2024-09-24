@@ -16,6 +16,11 @@ public class Constants {
         return MATERIAL_NAME_SLAB_ENDING;
     }
 
+    private final static String HOE_TYPE_ENDING = "_HOE";
+    public static String getHoeTypeEnding() {
+        return HOE_TYPE_ENDING;
+    }
+
     private final static NamespacedKey ENTITY_TYPE_KEY = new NamespacedKey(FixYourShit.getInstance(), "entity_type");
     public static NamespacedKey getEntityTypeKey() {
         return ENTITY_TYPE_KEY;

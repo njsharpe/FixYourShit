@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.njsharpe.fixyourshit.Constants;
 import net.njsharpe.fixyourshit.FixYourShit;
 import net.njsharpe.fixyourshit.item.AngelBlock;
 import net.njsharpe.fixyourshit.item.ExpTome;
@@ -19,8 +20,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.RayTraceResult;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
@@ -224,7 +225,7 @@ public class PlayerListener implements Listener {
 
     @SuppressWarnings("unused")
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    public void onPlayerPlaceAngelBlock(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
         if(event.getAction() != Action.RIGHT_CLICK_AIR) {
@@ -251,6 +252,45 @@ public class PlayerListener implements Listener {
         if(player.getGameMode() != GameMode.CREATIVE) {
             hand.subtract();
         }
+    }
+
+    @SuppressWarnings("unused")
+    @EventHandler
+    public void onPlayerUseHoe(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+
+        if(event.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
+
+        ItemStack hand = player.getInventory().getItem(event.getHand());
+        Material material = hand.getType();
+
+        if(!material.name().endsWith(Constants.getHoeTypeEnding())) {
+            return;
+        }
+
+        Block block = event.getClickedBlock();
+        if(block == null || block.getType() != Material.PODZOL) {
+            return;
+        }
+
+        Bukkit.getScheduler().runTaskLater(FixYourShit.getInstance(), () -> {
+            block.setType(Material.DIRT);
+
+            player.swingMainHand();
+
+            Random random = new Random();
+            player.playSound(player, Sound.ITEM_HOE_TILL, 1.0F, random.nextFloat() + 0.25F);
+
+            if(player.getGameMode() != GameMode.CREATIVE) {
+                hand.damage(1, player);
+            }
+        }, 1L);
     }
 
 }

@@ -5,6 +5,7 @@ import net.njsharpe.fixyourshit.Constants;
 import net.njsharpe.fixyourshit.FixYourShit;
 import net.njsharpe.fixyourshit.entity.Entities;
 import net.njsharpe.fixyourshit.event.ConcretePowderItemConvertEvent;
+import net.njsharpe.fixyourshit.event.DirtItemConvertEvent;
 import net.njsharpe.fixyourshit.item.SafariNet;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -17,11 +18,15 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class EntityListener implements Listener {
+
+    private final float verticalCauldronItemMomentum = 0.4275F;
 
     @SuppressWarnings({"unused", "deprecation"})
     @EventHandler
@@ -53,18 +58,10 @@ public class EntityListener implements Listener {
 
                 Location location = item.getLocation();
                 Block block = location.getBlock();
-                if(!block.getType().equals(Material.WATER_CAULDRON)) {
+
+                if(!this.isCauldronUpdated(block)) {
                     return;
                 }
-
-                Levelled levelled = (Levelled) block.getBlockData();
-                if(levelled.getLevel() < levelled.getMinimumLevel()) {
-                    return;
-                }
-
-                levelled.setLevel(levelled.getLevel() - 1);
-
-                block.setBlockData(levelled);
 
                 ConcretePowderItemConvertEvent e = new ConcretePowderItemConvertEvent(item);
                 Bukkit.getPluginManager().callEvent(e);
@@ -76,10 +73,74 @@ public class EntityListener implements Listener {
                 itemStack.setType(concrete);
                 item.setItemStack(itemStack);
 
-                // TODO: Add velocity to thrown item entity
-                // Force it to pop out of the cauldron and around in a relative circle
+                Random random = new Random();
+
+                item.setRotation(0, 0);
+                item.setVelocity(new Vector(random.nextFloat(), this.verticalCauldronItemMomentum, random.nextFloat()));
             }, 0L, 5L);
         }
+    }
+
+    @SuppressWarnings({"unused", "deprecation"})
+    @EventHandler
+    public void onDropDirt(ItemSpawnEvent event) {
+        Item item = event.getEntity();
+        ItemStack itemStack = item.getItemStack();
+        Material material = itemStack.getType();
+
+        if(material != Material.DIRT) {
+            return;
+        }
+
+        Bukkit.getScheduler().runTaskTimer(FixYourShit.getInstance(), task -> {
+            if(!item.isInWater() && !item.isOnGround()) {
+                return;
+            }
+
+            task.cancel();
+
+            Location location = item.getLocation();
+            Block block = location.getBlock();
+
+            if(!this.isCauldronUpdated(block)) {
+                return;
+            }
+
+            DirtItemConvertEvent e = new DirtItemConvertEvent(item);
+            Bukkit.getPluginManager().callEvent(e);
+
+            if(e.isCancelled()) {
+                return;
+            }
+
+            itemStack.setType(Material.MUD);
+            item.setItemStack(itemStack);
+
+            Random random = new Random();
+
+            item.setRotation(0, 0);
+            item.setVelocity(new Vector(random.nextFloat(), this.verticalCauldronItemMomentum, random.nextFloat()));
+        }, 0L, 5L);
+    }
+
+    private boolean isCauldronUpdated(Block block) {
+        if(!block.getType().equals(Material.WATER_CAULDRON)) {
+            return false;
+        }
+
+        Levelled levelled = (Levelled) block.getBlockData();
+        if(levelled.getLevel() > levelled.getMinimumLevel()) {
+            levelled.setLevel(levelled.getLevel() - 1);
+            block.setBlockData(levelled);
+            return true;
+        }
+
+        if(levelled.getLevel() == levelled.getMinimumLevel()) {
+            block.setType(Material.CAULDRON);
+            return true;
+        }
+
+        return false;
     }
 
     @SuppressWarnings("unused")

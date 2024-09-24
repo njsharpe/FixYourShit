@@ -11,7 +11,6 @@ public class BlockRecipe extends ShapedRecipe {
         super(Keys.getBlockKeyForMaterial(slab), result);
         this.shape("S ", "S ");
         this.setIngredient('S', slab);
-        this.setIngredient(' ', Material.AIR);
     }
 
 }

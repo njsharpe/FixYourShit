@@ -10,7 +10,6 @@ public class AngelBlockRecipe extends ShapedRecipe {
     public AngelBlockRecipe() {
         super(Constants.getAngelBlockRecipeKey(), AngelBlock.getEmpty().getItem());
         this.shape("   ", " G ", "FOF");
-        this.setIngredient(' ', Material.AIR);
         this.setIngredient('G', Material.GOLD_INGOT);
         this.setIngredient('F', Material.FEATHER);
         this.setIngredient('O', Material.OBSIDIAN);

@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat
+import java.util.*
+
 plugins {
     id("java")
     id("idea")
@@ -5,7 +8,7 @@ plugins {
 }
 
 group = "net.njsharpe"
-version = "20240924-1.12.0-SNAPSHOT"
+version = "${SimpleDateFormat("yyyyMMdd").format(Date())}-1.0.0"
 
 java {
     toolchain {
@@ -20,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.3-R0.1-SNAPSHOT")
 
     compileOnly("org.jetbrains:annotations:24.0.1")
 

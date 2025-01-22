@@ -29,6 +29,7 @@ public class FixYourShit extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EntityListener(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         this.getServer().getPluginManager().registerEvents(new BlockListener(), this);
+        this.getServer().getPluginManager().registerEvents(new InventoryListener(), this);
 
         this.getServer().getScheduler().runTaskTimer(this, new TimeBottleTickTask(), 0L, 20L);
     }

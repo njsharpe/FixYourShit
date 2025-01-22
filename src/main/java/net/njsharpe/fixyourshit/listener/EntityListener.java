@@ -1,6 +1,7 @@
 package net.njsharpe.fixyourshit.listener;
 
 import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
+import net.njsharpe.fixyourshit.Enums;
 import net.njsharpe.fixyourshit.Constants;
 import net.njsharpe.fixyourshit.FixYourShit;
 import net.njsharpe.fixyourshit.entity.Entities;
@@ -10,19 +11,25 @@ import net.njsharpe.fixyourshit.item.SafariNet;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Levelled;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.loot.LootContext;
+import org.bukkit.loot.LootTable;
+import org.bukkit.loot.LootTables;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class EntityListener implements Listener {
 
@@ -224,6 +231,53 @@ public class EntityListener implements Listener {
         }
 
         Entities.deserialize(living, bytes);
+    }
+
+    @SuppressWarnings({"unused", "UnstableApiUsage"})
+    @EventHandler
+    public void onEntityDeathByArrow(EntityDeathEvent event) {
+        LivingEntity entity = event.getEntity();
+
+        DamageSource source = event.getDamageSource();
+        if(source.getDamageType() != DamageType.ARROW) {
+            return;
+        }
+
+        Entity cause = source.getCausingEntity();
+        if(!(cause instanceof Player player)) {
+            return;
+        }
+
+        PlayerInventory inventory = player.getInventory();
+        ItemStack item = inventory.getItemInMainHand();
+        if(item.getType() != Material.BOW) {
+            return;
+        }
+
+        if(!item.containsEnchantment(Enchantment.LOOTING)) {
+            return;
+        }
+
+        int level = item.getEnchantmentLevel(Enchantment.LOOTING);
+
+        World world = player.getWorld();
+
+        Random random = new Random();
+        LootContext.Builder builder = new LootContext.Builder(entity.getLocation())
+                .killer(player)
+                .lootedEntity(entity);
+
+        LootContext context = builder.build();
+
+        Collection<ItemStack> items = Enums.getIfPresent(LootTables.class, entity.getType().name())
+                .map(lootTable -> {
+                    LootTable table = lootTable.getLootTable();
+                    return table.populateLoot(random, context);
+                })
+                .orElse(new ArrayList<>());
+
+        event.getDrops().clear();
+        event.getDrops().addAll(items);
     }
 
 }

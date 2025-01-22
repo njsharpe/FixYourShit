@@ -80,19 +80,19 @@ public class ArmoredElytra implements ShitItem {
         if(this.armor != null) {
             AttributeModifier armor = new AttributeModifier(Constants.getArmoredElytraArmorModifierKey(),
                     this.armor, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.CHEST);
-            meta.addAttributeModifier(Attribute.GENERIC_ARMOR, armor);
+            meta.addAttributeModifier(Attribute.ARMOR, armor);
         }
 
         if(this.toughness != null) {
             AttributeModifier toughness = new AttributeModifier(Constants.getArmoredElytraToughnessModifierKey(),
                     this.toughness, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.CHEST);
-            meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, toughness);
+            meta.addAttributeModifier(Attribute.ARMOR_TOUGHNESS, toughness);
         }
 
         if(this.knockbackResistance != null) {
             AttributeModifier knockbackResistance = new AttributeModifier(Constants.getArmoredElytraKnockbackResistanceModifierKey(),
                     this.knockbackResistance, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.CHEST);
-            meta.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, knockbackResistance);
+            meta.addAttributeModifier(Attribute.KNOCKBACK_RESISTANCE, knockbackResistance);
         }
 
         item.setItemMeta(meta);
@@ -128,13 +128,13 @@ public class ArmoredElytra implements ShitItem {
 
         Multimap<Attribute, AttributeModifier> modifiers = sourceArmorType.getDefaultAttributeModifiers(EquipmentSlot.CHEST);
 
-        Double armor = Attributes.getAttributeSum(modifiers, Attribute.GENERIC_ARMOR,
+        Double armor = Attributes.getAttributeSum(modifiers, Attribute.ARMOR,
                 a -> true);
 
-        Double toughness = Attributes.getAttributeSum(modifiers, Attribute.GENERIC_ARMOR_TOUGHNESS,
+        Double toughness = Attributes.getAttributeSum(modifiers, Attribute.ARMOR_TOUGHNESS,
                 a -> true);
 
-        Double knockbackResistance = Attributes.getAttributeSum(modifiers, Attribute.GENERIC_KNOCKBACK_RESISTANCE,
+        Double knockbackResistance = Attributes.getAttributeSum(modifiers, Attribute.KNOCKBACK_RESISTANCE,
                 a -> true);
 
         return Maker.make(new ArmoredElytra(armor, toughness, knockbackResistance, sourceArmor.getType()), ae ->
